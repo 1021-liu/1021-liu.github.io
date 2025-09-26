@@ -387,12 +387,12 @@ img {
 }
 
 .site-description {
-  margin: 60px auto;
+  margin: 100px auto;
   color: $base-lighten-color;
   font-size: 16px;
 
   @include mobile {
-    margin: 60px auto;
+    margin: 100px auto;
   }
 }
 
