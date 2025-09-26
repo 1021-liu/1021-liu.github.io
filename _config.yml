@@ -1,8 +1,8 @@
 name: "liujq blog"
 description: "苡澄的个人技术博客"
 
-avatar: https://1021-liu.github.io/images/avatar.jpg
-favicon: https://1021-liu.github.io/images/favicon.ico
+avatar: https://raw.githubusercontent.com/1021-liu/1021-liu.github.io/main/images/touxiang.jpg
+favicon: https://raw.githubusercontent.com/1021-liu/1021-liu.github.io/main/images/wangye.png
 
 navigation:
   - name: 首页
