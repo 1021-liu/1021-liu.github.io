@@ -1,7 +1,454 @@
-layout	title	date	tags	comments	author
-post
-闪电比比看
-2025-09-29
-教学游戏
-true
-liujq
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>闪电比比看</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial Rounded MT Bold', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 20px;
+        }
+        
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 1152px;
+            height: 648px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        h1 {
+            color: white;
+            font-size: 3.5rem;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            letter-spacing: 3px;
+        }
+        
+        .game-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-grow: 1;
+            position: relative;
+        }
+        
+        .number {
+            font-size: 7rem;
+            color: white;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .circle {
+            color: #ff4757;
+            font-size: 8rem;
+            text-shadow: 0 0 20px rgba(255, 71, 87, 0.7);
+            animation: pulse 2s infinite;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 180px;
+            height: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        button {
+            font-size: 1.8rem;
+            padding: 15px 50px;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .timer {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .timer-bar {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(to right, #00b4db, #0083b0);
+            border-radius: 5px;
+            transition: width 1s linear;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .option-btn {
+            font-size: 1.5rem;
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            min-width: 120px;
+        }
+        
+        .option-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+        
+        .option-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .option-btn.correct {
+            background: linear-gradient(to right, #56ab2f, #a8e063);
+            border-color: #56ab2f;
+        }
+        
+        .next-btn {
+            font-size: 1.2rem;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+        }
+        
+        .next-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .symbol {
+            font-size: 2.2rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+        
+        .text {
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+        
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+        
+        @media (max-width: 768px) {
+            .game-container {
+                height: 400px;
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .number {
+                font-size: 5rem;
+                width: 150px;
+                height: 150px;
+            }
+            
+            .circle {
+                font-size: 6rem;
+                width: 140px;
+                height: 140px;
+            }
+            
+            button {
+                font-size: 1.5rem;
+                padding: 12px 40px;
+            }
+            
+            .option-btn {
+                font-size: 1.2rem;
+                padding: 10px 20px;
+                min-width: 100px;
+            }
+            
+            .symbol {
+                font-size: 1.8rem;
+            }
+            
+            .text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>闪电比比看</h1>
+        
+        <div class="timer">
+            <div class="timer-bar" id="timerBar"></div>
+        </div>
+        
+        <div class="game-area">
+            <div class="number" id="leftNumber">?</div>
+            <div class="circle">⭕</div>
+            <div class="number" id="rightNumber">?</div>
+        </div>
+        
+        <div class="buttons" id="buttons">
+            <button class="option-btn" id="greaterBtn">
+                <span class="symbol">></span>
+                <span class="text">大于</span>
+            </button>
+            <button class="option-btn" id="equalBtn">
+                <span class="symbol">=</span>
+                <span class="text">等于</span>
+            </button>
+            <button class="option-btn" id="lessBtn">
+                <span class="symbol"><</span>
+                <span class="text">小于</span>
+            </button>
+        </div>
+        
+        <div class="controls">
+            <button id="startBtn">开始游戏</button>
+        </div>
+        
+        <button class="next-btn" id="nextBtn">下一题</button>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const leftNumberEl = document.getElementById('leftNumber');
+        const rightNumberEl = document.getElementById('rightNumber');
+        const timerBar = document.getElementById('timerBar');
+        const startBtn = document.getElementById('startBtn');
+        const buttons = document.getElementById('buttons');
+        const greaterBtn = document.getElementById('greaterBtn');
+        const equalBtn = document.getElementById('equalBtn');
+        const lessBtn = document.getElementById('lessBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        // 游戏变量
+        let timer;
+        let answerTimer;
+        let timeLeft = 10;
+        let isGameActive = false;
+        let currentAnswer;
+        let correctBtn;
+        let isShowingAnswer = false;
+        
+        // 生成新题目
+        function generateQuestion() {
+            const leftNum = Math.floor(Math.random() * 10) + 1;
+            const rightNum = Math.floor(Math.random() * 10) + 1;
+            
+            leftNumberEl.textContent = leftNum;
+            rightNumberEl.textContent = rightNum;
+            
+            // 判断正确答案
+            if (leftNum > rightNum) {
+                currentAnswer = 'greater';
+                correctBtn = greaterBtn;
+            } else if (leftNum < rightNum) {
+                currentAnswer = 'less';
+                correctBtn = lessBtn;
+            } else {
+                currentAnswer = 'equal';
+                correctBtn = equalBtn;
+            }
+            
+            // 初始状态清除正确答案提示
+            greaterBtn.classList.remove('correct');
+            equalBtn.classList.remove('correct');
+            lessBtn.classList.remove('correct');
+            
+            // 7秒后显示正确答案
+            clearTimeout(answerTimer);
+            answerTimer = setTimeout(showCorrectAnswer, 7000);
+        }
+        
+        // 显示正确答案提示
+        function showCorrectAnswer() {
+            isShowingAnswer = true;
+            
+            // 添加正确状态
+            correctBtn.classList.add('correct');
+            
+            // 3秒后自动切换到下一题
+            setTimeout(() => {
+                correctBtn.classList.remove('correct');
+                isShowingAnswer = false;
+                nextQuestion();
+            }, 1000);
+        }
+        
+        // 检查答案
+        function checkAnswer(userChoice) {
+            if (!isGameActive || isShowingAnswer) return;
+            
+            clearInterval(timer);
+            clearTimeout(answerTimer);
+            
+            if (userChoice === currentAnswer) {
+                // 答对了 - 直接进入下一题
+                nextQuestion();
+            } else {
+                // 答错了 - 直接进入下一题
+                nextQuestion();
+            }
+        }
+        
+        // 进入下一题
+        function nextQuestion() {
+            if (isShowingAnswer) return;
+            
+            // 显示正确答案2秒
+            isShowingAnswer = true;
+            correctBtn.classList.add('correct');
+            
+            // 2秒后切换到下一题
+            setTimeout(() => {
+                // 清除正确答案提示
+                greaterBtn.classList.remove('correct');
+                equalBtn.classList.remove('correct');
+                lessBtn.classList.remove('correct');
+                
+                isShowingAnswer = false;
+                generateQuestion();
+                startTimer();
+            }, 1000);
+        }
+        
+        // 自动切换到下一题（时间到）
+        function autoNextQuestion() {
+            if (isShowingAnswer) return;
+            
+            // 显示正确答案2秒
+            isShowingAnswer = true;
+            correctBtn.classList.add('correct');
+            
+            // 2秒后切换到下一题
+            setTimeout(() => {
+                // 清除正确答案提示
+                greaterBtn.classList.remove('correct');
+                equalBtn.classList.remove('correct');
+                lessBtn.classList.remove('correct');
+                
+                isShowingAnswer = false;
+                generateQuestion();
+                startTimer();
+            }, 2000);
+        }
+        
+        // 游戏逻辑
+        function startGame() {
+            isGameActive = true;
+            startBtn.style.display = 'none';
+            buttons.style.opacity = '1';
+            nextBtn.style.display = 'block';
+            
+            generateQuestion();
+            startTimer();
+        }
+        
+        // 计时器函数
+        function startTimer() {
+            clearInterval(timer);
+            timeLeft = 7;
+            timerBar.style.width = '100%';
+            
+            timer = setInterval(() => {
+                timeLeft--;
+                timerBar.style.width = (timeLeft / 7 * 100) + '%';
+                
+                if (timeLeft <= 0) {
+                    // 时间到，显示答案并自动切换到下一题
+                    clearTimeout(answerTimer);
+                    autoNextQuestion();
+                }
+            }, 1000);
+        }
+        
+        // 事件监听
+        startBtn.addEventListener('click', startGame);
+        greaterBtn.addEventListener('click', () => checkAnswer('greater'));
+        equalBtn.addEventListener('click', () => checkAnswer('equal'));
+        lessBtn.addEventListener('click', () => checkAnswer('less'));
+        nextBtn.addEventListener('click', nextQuestion);
+        
+        // 初始隐藏下一题按钮
+        nextBtn.style.display = 'none';
+    </script>
+</body>
+</html>
